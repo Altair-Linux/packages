@@ -1,0 +1,78 @@
+name: Package Build
+
+on:
+  push:
+    paths:
+      - '**/astra.pkg'
+      - '**/build.sh'
+      - '**/files/**'
+      - '.github/workflows/package-build.yml'
+  pull_request:
+    paths:
+      - '**/astra.pkg'
+      - '**/build.sh'
+      - '**/files/**'
+      - '.github/workflows/package-build.yml'
+  workflow_dispatch:
+
+jobs:
+  discover-packages:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Checkout packages
+        uses: actions/checkout@v4
+
+      - name: Build matrix
+        id: matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          dirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.git' ! -name '.github' -printf '%f\n' | sort)
+          if [[ -z "$dirs" ]]; then
+            echo 'matrix={"package":[]}' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          json=$(printf '%s\n' "$dirs" | jq -R . | jq -cs '{package: .}')
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+
+  build-packages:
+    needs: discover-packages
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover-packages.outputs.matrix) }}
+    steps:
+      - name: Checkout packages
+        uses: actions/checkout@v4
+
+      - name: Checkout Astra
+        uses: actions/checkout@v4
+        with:
+          repository: Altair-Linux/Astra
+          path: Astra
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build Astra binary
+        working-directory: Astra
+        run: cargo build -p astra
+
+      - name: Build package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/packages
+          Astra/target/debug/astra build "${{ matrix.package }}" --output out/packages
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.package }}-astpkg"
+          path: out/packages/*.astpkg
+          if-no-files-found: error

@@ -1,0 +1,8 @@
+name=nano
+version=7.2.0
+architecture=x86_64
+description=GNU nano text editor
+maintainer=Altair Linux <contact@altairlinux.org>
+license=ZPL-2.0
+dependencies=
+files_dir=files
