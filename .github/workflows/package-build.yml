@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name '.git' ! -name '.github' -printf '%f\n' | sort)
+          dirs=$(find . -mindepth 2 -maxdepth 2 -name 'astra.pkg' -printf '%h\n' | sed 's|^\./||' | sort)
           if [[ -z "$dirs" ]]; then
             echo 'matrix={"package":[]}' >> "$GITHUB_OUTPUT"
             exit 0
