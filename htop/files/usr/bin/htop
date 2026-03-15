@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "htop 3.3.0 (Altair sample package)"

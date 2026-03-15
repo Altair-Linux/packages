@@ -1,0 +1,8 @@
+name=tree
+version=2.1.1
+architecture=x86_64
+description=list contents of directories in a tree like format
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-2.0-or-later
+dependencies=
+files_dir=files

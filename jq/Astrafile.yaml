@@ -1,0 +1,11 @@
+name: jq
+version: "1.7.1"
+architecture: x86_64
+description: lightweight and flexible command line JSON processor
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: MIT
+dependencies: []
+optional_dependencies: []
+conflicts: []
+provides: []
+files_dir: files

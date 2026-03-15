@@ -1,0 +1,11 @@
+name: ripgrep
+version: "14.1.0"
+architecture: x86_64
+description: line oriented search tool that recursively searches directories
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: MIT
+dependencies: []
+optional_dependencies: []
+conflicts: []
+provides: []
+files_dir: files
