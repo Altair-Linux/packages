@@ -222,8 +222,27 @@ jobs:
           base: main
           delete-branch: true
 
+  trigger-astra-ops:
+    needs: collect-artifacts
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.ASTRA_REPO_TOKEN != ''
+    steps:
+      - name: Trigger Astra ecosystem automation workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api repos/Altair-Linux/Astra/dispatches \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -f event_type='packages-updated' \
+            -f client_payload[repository]="${{ github.repository }}" \
+            -f client_payload[ref]="${{ github.ref }}" \
+            -f client_payload[sha]="${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ secrets.ASTRA_REPO_TOKEN }}
+
   notify-failure:
-    needs: [build-packages, collect-artifacts, update-altair-repo]
+    needs: [build-packages, collect-artifacts, update-altair-repo, trigger-astra-ops]
     runs-on: ubuntu-latest
     if: failure() && secrets.DISCORD_WEBHOOK_URL != ''
     steps:
