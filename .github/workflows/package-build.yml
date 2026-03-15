@@ -63,12 +63,20 @@ jobs:
         working-directory: Astra
         run: cargo build -p astra
 
+      - name: Initialize Astra build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .astra-ci .astra-root
+          Astra/target/debug/astra --data-dir .astra-ci --root .astra-root init
+          Astra/target/debug/astra --data-dir .astra-ci --root .astra-root key generate
+
       - name: Build package
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p out/packages
-          Astra/target/debug/astra build "${{ matrix.package }}" --output out/packages
+          Astra/target/debug/astra --data-dir .astra-ci --root .astra-root build "${{ matrix.package }}" --output out/packages
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
