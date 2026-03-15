@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - '**/astra.pkg'
+      - '**/Astrafile.yaml'
       - '**/build.sh'
       - '**/files/**'
       - '.github/workflows/package-build.yml'
   pull_request:
     paths:
       - '**/astra.pkg'
+      - '**/Astrafile.yaml'
       - '**/build.sh'
       - '**/files/**'
       - '.github/workflows/package-build.yml'
