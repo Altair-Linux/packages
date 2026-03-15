@@ -1,0 +1,8 @@
+name=curl
+version=8.7.1
+architecture=x86_64
+description=curl command line tool for transferring data with URLs
+maintainer=Altair Linux <contact@altairlinux.org>
+license=curl
+dependencies=
+files_dir=files

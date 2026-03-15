@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "jq-1.7.1 (Altair sample package)"
