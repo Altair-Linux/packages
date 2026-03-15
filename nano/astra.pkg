@@ -3,6 +3,6 @@ version=7.2.0
 architecture=x86_64
 description=GNU nano text editor
 maintainer=Altair Linux <contact@altairlinux.org>
-license=ZPL-2.0
+license=GPL-3.0-or-later
 dependencies=
 files_dir=files
