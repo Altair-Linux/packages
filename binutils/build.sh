@@ -39,5 +39,4 @@ cd build
 make -j"${JOBS:-$(nproc)}"
 make DESTDIR="${DESTDIR}" install
 
-# Remove static libs that bloat the installed image; shared versions suffice.
 find "${DESTDIR}${PREFIX}/lib" -name '*.a' -delete
