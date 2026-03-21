@@ -1,9 +1,14 @@
-name=binutils
-version=2.42
-architecture=x86_64
-description=GNU binary utilities — assembler, linker, and related tools
-maintainer=Altair Linux <contact@altairlinux.org>
-license=GPL-3.0-or-later
-dependencies=musl linux-headers make
-files_dir=files
-
+name: binutils
+version: "2.42"
+architecture: x86_64
+description: GNU binary utilities — assembler, linker, and related tools
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, linux-headers]
+optional_dependencies: []
+conflicts: []
+provides: [binutils]
+source:
+  url: "https://ftp.gnu.org/gnu/binutils/binutils-2.42.tar.xz"
+  sha256: "f6e4d41fd5fc778b06b7891457b3620da5ecea1006c6a4a41ae998109f85a800"
+files_dir: files
