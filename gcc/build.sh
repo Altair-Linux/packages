@@ -6,22 +6,21 @@
 # a host GCC (or a cross-compiler) is used. Once binutils and musl are
 # installed, this script produces the Altair-native compiler.
 #
-# GCC requires bundled prerequisites. Fetch them before running:
-#   cd gcc-13.3.0 && ./contrib/download_prerequisites
-# This pulls in gmp, mpfr, mpc, and isl built in-tree.
+# GCC prerequisite libraries (gmp, mpfr, mpc, isl) must be vendored
+# alongside this source tree before building. They are declared as
+# additional sources in Astrafile.yaml and extracted by the package
+# manager into the gcc source directory before this script runs.
+# Do NOT call ./contrib/download_prerequisites at build time — that
+# introduces an unverified network dependency.
 #
 # Prerequisites: musl, linux-headers, binutils, make.
 # Build must be done out-of-tree.
 set -eu
 
-: "${PREFIX:=/usr}"
-
 . "$(dirname "$0")/../common.sh"
 astra_build_init
 
-if [ ! -d gmp ]; then
-    ./contrib/download_prerequisites
-fi
+: "${PREFIX:=/usr}"
 
 mkdir -p build
 cd build
