@@ -149,9 +149,6 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Checkout packages
-        uses: actions/checkout@v4
-
       - name: Checkout altair-repo
         uses: actions/checkout@v4
         with:
@@ -220,19 +217,3 @@ jobs:
           branch: "automation/publish-packages-${{ github.run_id }}"
           base: main
           delete-branch: true
-
-  notify-failure:
-    name: Notify Failure
-    needs: [build-packages, collect-artifacts]
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-      - name: Notify Discord on workflow failure
-        shell: bash
-        run: |
-          set -euo pipefail
-          payload=$(jq -n \
-            --arg repo "${{ github.repository }}" \
-            --arg run_url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            '{content:("❌ Package Build failed for " + $repo + "\n" + $run_url)}')
-          curl -sS -X POST -H "Content-Type: application/json" -d "$payload" "${{ secrets.DISCORD_WEBHOOK_URL }}"
