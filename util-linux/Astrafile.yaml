@@ -4,7 +4,7 @@ architecture: x86_64
 description: util-linux — essential system utilities (mount, lsblk, fdisk, etc.)
 maintainer: "Altair Linux <contact@altairlinux.org>"
 license: GPL-2.0-or-later
-dependencies: [musl, gcc, make, ncurses, zlib]
+dependencies: [musl, gcc, make, ncurses]
 optional_dependencies: []
 conflicts: []
 provides: [util-linux]
