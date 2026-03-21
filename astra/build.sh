@@ -9,11 +9,19 @@
 # Astra is a Rust project. Cargo and the Rust toolchain must be available.
 set -eu
 
-: "${DESTDIR:?DESTDIR must be set}"
+. "$(dirname "$0")/../common.sh"
+astra_build_init
+
 : "${PREFIX:=/usr}"
 
-cargo build --release -p astra
+# The package manager unpacks the source archive into a subdirectory.
+# Locate the Cargo.toml to find the actual source root robustly rather
+# than assuming a fixed directory name based on the archive.
+SRC_ROOT=$(find . -maxdepth 2 -name 'Cargo.toml' -not -path '*/target/*' | head -n1 | xargs dirname)
+cd "${SRC_ROOT}"
 
-install -Dm755 target/release/astra "${DESTDIR}${PREFIX}/bin/astra"
+cargo build --release --target-dir "${OLDPWD}/target" -p astra
+
+install -Dm755 "${OLDPWD}/target/release/astra" "${DESTDIR}${PREFIX}/bin/astra"
 
 "${DESTDIR}${PREFIX}/bin/astra" --version
