@@ -1,0 +1,14 @@
+name: linux-headers
+version: "6.9.12"
+architecture: x86_64
+description: Linux kernel headers for userspace development and libc bootstrapping
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-2.0-only
+dependencies: []
+optional_dependencies: []
+conflicts: []
+provides: [linux-api-headers]
+source:
+  url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.12.tar.xz"
+  sha256: "b9c4a9951ed39e36d0a5b4b32edfe8d0d0a87cc62b3d1fb74f0de9d19ac07a27"
+files_dir: files
