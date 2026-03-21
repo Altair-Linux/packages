@@ -4,7 +4,7 @@ architecture: x86_64
 description: Linux kernel headers for userspace development and libc bootstrapping
 maintainer: "Altair Linux <contact@altairlinux.org>"
 license: GPL-2.0-only
-dependencies: [make]
+dependencies: []
 optional_dependencies: []
 conflicts: []
 provides: [linux-api-headers]
