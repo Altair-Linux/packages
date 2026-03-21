@@ -4,7 +4,19 @@ on:
   push:
     branches:
       - '**'
+    paths:
+      - '**/astra.pkg'
+      - '**/Astrafile.yaml'
+      - '**/build.sh'
+      - '**/files/**'
+      - '.github/workflows/package-build.yml'
   pull_request:
+    paths:
+      - '**/astra.pkg'
+      - '**/Astrafile.yaml'
+      - '**/build.sh'
+      - '**/files/**'
+      - '.github/workflows/package-build.yml'
   workflow_dispatch:
 
 concurrency:
@@ -149,6 +161,15 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Check ALTAIR_REPO_TOKEN
+        env:
+          TOKEN: ${{ secrets.ALTAIR_REPO_TOKEN }}
+        run: |
+          if [[ -z "${TOKEN}" ]]; then
+            echo "ALTAIR_REPO_TOKEN is not set — skipping publish." >&2
+            exit 0
+          fi
+
       - name: Checkout altair-repo
         uses: actions/checkout@v4
         with:
