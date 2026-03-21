@@ -1,0 +1,14 @@
+name: findutils
+version: "4.10.0"
+architecture: x86_64
+description: GNU findutils — find, xargs, and locate
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [findutils]
+source:
+  url: "https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz"
+  sha256: "1387e0b67ff247d2abde998f90dfbf70c1491391a59ddfecb8ae698789f0a4f5"
+files_dir: files
