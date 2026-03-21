@@ -1,0 +1,14 @@
+name: pkg-config
+version: "0.29.2"
+architecture: x86_64
+description: Helper tool for compiling and linking against installed libraries
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-2.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [pkg-config, pkgconfig]
+source:
+  url: "https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
+  sha256: "6fc69c01688c9458a57eb9a1664c9aba372ccda420a02bf4429fe610e7e7d591"
+files_dir: files
