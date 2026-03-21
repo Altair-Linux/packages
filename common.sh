@@ -6,8 +6,14 @@
 #   . "$(dirname "$0")/../common.sh"
 #   astra_build_init
 
-# Default target triple — override by setting ALTAIR_TARGET before sourcing.
+# ALTAIR_TARGET: triple of the system being built FOR.
+# ALTAIR_HOST:   triple of the system that will run the built tools
+#                (defaults to ALTAIR_TARGET for native builds).
+# ALTAIR_BUILD:  triple of the system performing the build
+#                (defaults to ALTAIR_TARGET for native builds).
 : "${ALTAIR_TARGET:=x86_64-altair-linux-musl}"
+: "${ALTAIR_HOST:=${ALTAIR_TARGET}}"
+: "${ALTAIR_BUILD:=${ALTAIR_TARGET}}"
 
 # Abort if DESTDIR is not set.
 check_destdir() {
