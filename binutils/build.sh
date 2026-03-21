@@ -8,10 +8,16 @@
 # Build is done out-of-tree as required by the binutils build system.
 set -eu
 
-: "${PREFIX:=/usr}"
-
 . "$(dirname "$0")/../common.sh"
 astra_build_init
+
+: "${PREFIX:=/usr}"
+
+# ALTAIR_TARGET: the target triple we are building FOR.
+# ALTAIR_BUILD:  the triple of the machine running this build (defaults to target for native builds).
+# ALTAIR_HOST:   the triple of the machine that will run the built tools (defaults to target).
+: "${ALTAIR_BUILD:=${ALTAIR_TARGET}}"
+: "${ALTAIR_HOST:=${ALTAIR_TARGET}}"
 
 mkdir -p build
 cd build
@@ -19,8 +25,8 @@ cd build
 ../configure \
     --prefix="${PREFIX}" \
     --target="${ALTAIR_TARGET}" \
-    --host="${ALTAIR_TARGET}" \
-    --build="${ALTAIR_TARGET}" \
+    --host="${ALTAIR_HOST}" \
+    --build="${ALTAIR_BUILD}" \
     --with-sysroot=/ \
     --enable-shared \
     --enable-static \
