@@ -159,6 +159,14 @@ jobs:
     name: Publish to altair-repo
     needs: collect-artifacts
     runs-on: ubuntu-latest
+    # Gate conditions — ALL three must be true to publish:
+    #   1. Push to main branch
+    #   2. vars.PUBLISH_ENABLED == 'true'  (repo variable — opt-in to publishing)
+    #   3. vars.ALTAIR_REPO_TOKEN_SET == 'true'  (repo variable — must be set to 'true'
+    #      at the same time as the ALTAIR_REPO_TOKEN secret is added, and cleared when
+    #      the secret is removed; keeps the job-level if: in sync with the secret)
+    # NOTE: secrets.ALTAIR_REPO_TOKEN cannot be referenced in job-level if: conditions
+    # (GitHub Actions limitation), so vars.ALTAIR_REPO_TOKEN_SET acts as its proxy.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PUBLISH_ENABLED == 'true' && vars.ALTAIR_REPO_TOKEN_SET == 'true'
     permissions:
       contents: write
