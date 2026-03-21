@@ -1,0 +1,14 @@
+name: gzip
+version: "1.13"
+architecture: x86_64
+description: GNU gzip — compression and decompression utility
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [gzip]
+source:
+  url: "https://ftp.gnu.org/gnu/gzip/gzip-1.13.tar.xz"
+  sha256: "7454eb6935db17c6655576c2e1b0fabefd38b4d0936e0f87f48cd062ce91a057"
+files_dir: files
