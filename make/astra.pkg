@@ -1,0 +1,8 @@
+name=make
+version=4.4.1
+architecture=x86_64
+description=GNU Make — tool to control the generation of executables from source
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc
+files_dir=files
