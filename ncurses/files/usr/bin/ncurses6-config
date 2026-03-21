@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "ncurses6-config stub — replaced at build time"
+```
+
+---
+
+**`readline/astra.pkg`:**
+```
+name=readline
+version=8.2
+architecture=x86_64
+description=GNU readline — command-line editing library
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make ncurses
+files_dir=files
