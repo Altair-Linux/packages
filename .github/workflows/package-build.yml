@@ -161,6 +161,15 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Verify ALTAIR_REPO_TOKEN is set
+        env:
+          TOKEN: ${{ secrets.ALTAIR_REPO_TOKEN }}
+        run: |
+          if [[ -z "${TOKEN}" ]]; then
+            echo "::error::ALTAIR_REPO_TOKEN secret is not set. Cannot publish to altair-repo."
+            exit 1
+          fi
+
       - name: Checkout altair-repo
         uses: actions/checkout@v4
         with:
