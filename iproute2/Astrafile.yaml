@@ -1,0 +1,14 @@
+name: iproute2
+version: "6.9.0"
+architecture: x86_64
+description: iproute2 — IP routing and network configuration utilities
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-2.0-or-later
+dependencies: [musl, gcc, make, zlib]
+optional_dependencies: []
+conflicts: []
+provides: [iproute2]
+source:
+  url: "https://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-6.9.0.tar.xz"
+  sha256: "e55e3bba8b9e18f1b1d87dc9c3c2b1a8fdc74af28f1bc30b52deec0c3d0d2a8d"
+files_dir: files
