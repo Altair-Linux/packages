@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "coreutils stub — replaced at build time"
+```
+
+---
+
+**`findutils/astra.pkg`:**
+```
+name=findutils
+version=4.10.0
+architecture=x86_64
+description=GNU findutils — find, xargs, and locate
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make
+files_dir=files
