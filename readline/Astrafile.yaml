@@ -1,0 +1,14 @@
+name: readline
+version: "8.2"
+architecture: x86_64
+description: GNU readline — command-line editing library
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make, ncurses]
+optional_dependencies: []
+conflicts: []
+provides: [readline, libreadline]
+source:
+  url: "https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz"
+  sha256: "3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35"
+files_dir: files
