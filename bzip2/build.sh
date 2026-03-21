@@ -2,7 +2,6 @@
 # bzip2/build.sh
 # Builds bzip2 and libbz2.
 # bzip2 does not use autoconf; it ships a plain Makefile.
-# A shared library build requires a separate make invocation.
 #
 # Prerequisites: musl, gcc, make.
 set -eu
@@ -12,10 +11,12 @@ astra_build_init
 
 : "${PREFIX:=/usr}"
 
-# Derive versioned library name from the package version so this
-# script stays correct when Astrafile.yaml is bumped.
-BZIP2_VER="1.0.8"
-LIBBZ2_SO="libbz2.so.${BZIP2_VER}"
+# Derive the versioned library name from ASTRA_PKG_VERSION, which the
+# package manager sets from Astrafile.yaml at build time. This ensures
+# the library filename stays in sync with the declared package version
+# without hard-coding it here. Falls back to the current known version.
+: "${ASTRA_PKG_VERSION:=1.0.8}"
+LIBBZ2_SO="libbz2.so.${ASTRA_PKG_VERSION}"
 
 # Build shared library.
 make -f Makefile-libbz2_so CC="${CC:-gcc}" CFLAGS="${CFLAGS:--O2}"
