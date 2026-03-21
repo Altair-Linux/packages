@@ -1,0 +1,14 @@
+name: make
+version: "4.4.1"
+architecture: x86_64
+description: GNU Make — tool to control the generation of executables from source
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc]
+optional_dependencies: []
+conflicts: []
+provides: [make]
+source:
+  url: "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
+  sha256: "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
+files_dir: files
