@@ -20,11 +20,7 @@ astra_build_init
 
 : "${PREFIX:=/usr}"
 
-# ALTAIR_TARGET: the target triple we are building FOR.
-# ALTAIR_BUILD:  the triple of the machine running this build (defaults to target for native builds).
-# ALTAIR_HOST:   the triple of the machine that will run the compiler (defaults to target).
-: "${ALTAIR_BUILD:=${ALTAIR_TARGET}}"
-: "${ALTAIR_HOST:=${ALTAIR_TARGET}}"
+# ALTAIR_BUILD and ALTAIR_HOST default to ALTAIR_TARGET (set in common.sh) for native builds.
 
 # Derive arch-specific GCC flags from ALTAIR_TARGET so non-x86_64
 # targets are configured correctly.
