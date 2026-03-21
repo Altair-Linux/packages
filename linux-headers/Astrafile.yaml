@@ -5,7 +5,7 @@ description: Linux kernel headers for userspace development and libc bootstrappi
 maintainer: "Altair Linux <contact@altairlinux.org>"
 license: GPL-2.0-only
 dependencies: [make]
-optional_dependencies: [make]
+optional_dependencies: []
 conflicts: []
 provides: [linux-api-headers]
 source:
