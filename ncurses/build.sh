@@ -6,10 +6,10 @@
 # Prerequisites: musl, gcc, make.
 set -eu
 
-: "${PREFIX:=/usr}"
-
 . "$(dirname "$0")/../common.sh"
 astra_build_init
+
+: "${PREFIX:=/usr}"
 
 ./configure \
     --prefix="${PREFIX}" \
@@ -26,11 +26,18 @@ make -j"${JOBS:-$(nproc)}"
 make DESTDIR="${DESTDIR}" install
 
 # Provide non-wide-char symlinks expected by most software.
+# Guard each symlink so we don't create dangling links when optional
+# components (e.g. C++) are disabled at configure time.
 for lib in ncurses ncurses++ form panel menu; do
-    ln -sf "lib${lib}w.so" "${DESTDIR}${PREFIX}/lib/lib${lib}.so"
-    ln -sf "${lib}w.pc"    "${DESTDIR}${PREFIX}/lib/pkgconfig/${lib}.pc"
+    if [ -f "${DESTDIR}${PREFIX}/lib/lib${lib}w.so" ]; then
+        ln -sf "lib${lib}w.so" "${DESTDIR}${PREFIX}/lib/lib${lib}.so"
+    fi
+    if [ -f "${DESTDIR}${PREFIX}/lib/pkgconfig/${lib}w.pc" ]; then
+        ln -sf "${lib}w.pc" "${DESTDIR}${PREFIX}/lib/pkgconfig/${lib}.pc"
+    fi
 done
-# Only create libcurses.so symlink if libncursesw.so is actually present
+
+# Only create libcurses.so symlink if libncursesw.so is actually present.
 if [ -f "${DESTDIR}${PREFIX}/lib/libncursesw.so" ]; then
     ln -sf libncursesw.so "${DESTDIR}${PREFIX}/lib/libcurses.so"
 fi
