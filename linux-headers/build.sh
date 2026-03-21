@@ -13,6 +13,14 @@ set -eu
 : "${ARCH:=x86_64}"
 : "${DESTDIR:?DESTDIR must be set}"
 
+# Abort if the package manager somehow passed an unverified source.
+case "${SOURCE_SHA256:-unset}" in
+  placeholder-*|unset)
+    echo "error: SOURCE_SHA256 is not set or is a placeholder. Refusing to build." >&2
+    exit 1
+    ;;
+esac
+
 # The kernel's headers_install target requires an absolute path.
 HDRDIR="$(realpath "${DESTDIR}/usr")"
 
