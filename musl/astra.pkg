@@ -1,9 +1,9 @@
-name=linux-headers
-version=6.9.12
+name=musl
+version=1.2.5
 architecture=x86_64
-description=Linux kernel headers for userspace development and libc bootstrapping
+description=Lightweight, fast, and correct C standard library for Linux
 maintainer=Altair Linux <contact@altairlinux.org>
-license=GPL-2.0-only
-dependencies=
+license=MIT
+dependencies=linux-headers
 files_dir=files
 
