@@ -7,11 +7,6 @@
 #   musl, gcc, make, openssl, zlib, ca-certificates, curl
 #
 # Astra is a Rust project. Cargo and the Rust toolchain must be available.
-#
-# The package manager is expected to unpack the source archive into a
-# directory matching the archive stem. We constrain the Cargo.toml search
-# to depth 1 only (the immediate subdirectory) to avoid ambiguity if
-# workspace members or example crates add their own Cargo.toml files.
 set -eu
 
 . "$(dirname "$0")/../common.sh"
@@ -19,20 +14,26 @@ astra_build_init
 
 : "${PREFIX:=/usr}"
 
-# Locate the top-level Cargo.toml at exactly depth 1 — the unpacked
-# source root. Fail explicitly if not found rather than silently using
-# a wrong directory.
-SRC_ROOT=$(find . -mindepth 1 -maxdepth 1 -name 'Cargo.toml' | head -n1 | xargs -r dirname)
-if [ -z "${SRC_ROOT}" ]; then
-    # Try depth 2 as fallback for archives that add one wrapper directory.
-    SRC_ROOT=$(find . -mindepth 2 -maxdepth 2 -name 'Cargo.toml' -not -path '*/target/*' \
-        | grep -v '/examples/' | grep -v '/tests/' | head -n1 | xargs -r dirname)
-fi
-if [ -z "${SRC_ROOT}" ]; then
-    echo "error: could not locate Cargo.toml in unpacked source tree." >&2
+# Locate the top-level Cargo.toml. The package manager unpacks the source
+# archive into a single subdirectory; we expect exactly one candidate at
+# depth 1 or 2, excluding workspace members, examples, and tests.
+# Fail explicitly if zero or more than one candidate is found.
+CANDIDATES=$(find . \( -path '*/target/*' -o -path '*/examples/*' -o -path '*/tests/*' \) -prune \
+    -o -mindepth 1 -maxdepth 2 -name 'Cargo.toml' -print \
+    | sort)
+
+COUNT=$(echo "${CANDIDATES}" | grep -c 'Cargo.toml' || true)
+
+if [ "${COUNT}" -eq 0 ]; then
+    echo "error: no Cargo.toml found in unpacked source tree." >&2
+    exit 1
+elif [ "${COUNT}" -gt 1 ]; then
+    echo "error: multiple Cargo.toml candidates found — cannot determine source root:" >&2
+    echo "${CANDIDATES}" >&2
     exit 1
 fi
 
+SRC_ROOT=$(dirname "${CANDIDATES}")
 cd "${SRC_ROOT}"
 
 cargo build --release --target-dir "${OLDPWD}/target" -p astra
