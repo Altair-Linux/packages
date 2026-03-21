@@ -6,12 +6,9 @@
 # a host GCC (or a cross-compiler) is used. Once binutils and musl are
 # installed, this script produces the Altair-native compiler.
 #
-# GCC's build system requires several prerequisites to be downloaded
-# alongside the source tree. Fetch them before running this script:
-#
+# GCC requires bundled prerequisites. Fetch them before running:
 #   cd gcc-13.3.0 && ./contrib/download_prerequisites
-#
-# This pulls in gmp, mpfr, mpc, and isl which are bundled in-tree.
+# This pulls in gmp, mpfr, mpc, and isl built in-tree.
 #
 # Prerequisites: musl, linux-headers, binutils, make.
 # Build must be done out-of-tree.
@@ -27,7 +24,6 @@ case "${SOURCE_SHA256:-unset}" in
     ;;
 esac
 
-# Download bundled prerequisites (gmp, mpfr, mpc, isl) if not present.
 if [ ! -d gmp ]; then
     ./contrib/download_prerequisites
 fi
@@ -60,5 +56,4 @@ cd build
 make -j"${JOBS:-$(nproc)}"
 make DESTDIR="${DESTDIR}" install
 
-# Symlink cc -> gcc for POSIX compatibility.
 ln -sf gcc "${DESTDIR}${PREFIX}/bin/cc"
