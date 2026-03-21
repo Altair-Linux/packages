@@ -1,34 +1,27 @@
 #!/bin/sh
-# linux-headers/build.sh
-# Installs sanitised Linux API headers into $DESTDIR.
-# These headers are consumed by musl/glibc and any userspace code that
-# includes <linux/...> or <asm/...>.  No compilation takes place here;
-# "headers_install" is a pure copy/filter step performed by the kernel's
-# own Makefile.
+# musl/build.sh
+# Builds and installs the musl C library.
+# musl is the system libc for Altair Linux; it must be built before
+# binutils or gcc, which link against it.
 #
-# Prerequisites: make, perl (for the kernel's unifdef script).
-# Architecture is inferred from the host unless ARCH is set externally.
+# Prerequisites: a working C compiler (host cc), linux-headers installed.
+# On the very first bootstrap pass a cross-compiler or temporary host gcc
+# is used; subsequent passes use the previously installed musl-gcc wrapper.
 set -eu
 
-: "${ARCH:=x86_64}"
 : "${DESTDIR:?DESTDIR must be set}"
+: "${PREFIX:=/usr}"
 
-# Abort if the package manager somehow passed an unverified source.
-case "${SOURCE_SHA256:-unset}" in
-  placeholder-*|unset)
-    echo "error: SOURCE_SHA256 is not set or is a placeholder. Refusing to build." >&2
-    exit 1
-    ;;
-esac
+./configure \
+    --prefix="${PREFIX}" \
+    --syslibdir="/lib" \
+    --enable-static \
+    --enable-shared
 
-# The kernel's headers_install target requires an absolute path.
-HDRDIR="$(realpath "${DESTDIR}/usr")"
+make -j"${JOBS:-$(nproc)}"
+make DESTDIR="${DESTDIR}" install
 
-make ARCH="${ARCH}" \
-     INSTALL_HDR_PATH="${HDRDIR}" \
-     headers_install
-
-# Remove files that leak internal kernel types not meant for userspace.
-find "${HDRDIR}/include" \
-     \( -name '.install' -o -name '..install.cmd' \) \
-     -delete
+# Create the musl-gcc wrapper symlink expected by downstream build scripts.
+if [ -f "${DESTDIR}${PREFIX}/bin/musl-gcc" ]; then
+    ln -sf musl-gcc "${DESTDIR}${PREFIX}/bin/musl-cc"
+fi
