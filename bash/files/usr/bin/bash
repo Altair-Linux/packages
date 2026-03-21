@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "bash stub — replaced at build time"
+```
+
+---
+
+**`util-linux/astra.pkg`:**
+```
+name=util-linux
+version=2.40.1
+architecture=x86_64
+description=util-linux — essential system utilities (mount, lsblk, fdisk, etc.)
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-2.0-or-later
+dependencies=musl gcc make ncurses zlib
+files_dir=files
