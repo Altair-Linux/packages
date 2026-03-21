@@ -1,0 +1,14 @@
+name: e2fsprogs
+version: "1.47.1"
+architecture: x86_64
+description: e2fsprogs — ext2/3/4 filesystem utilities
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-2.0-or-later
+dependencies: [musl, gcc, make, util-linux]
+optional_dependencies: []
+conflicts: []
+provides: [e2fsprogs]
+source:
+  url: "https://mirrors.edge.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v1.47.1/e2fsprogs-1.47.1.tar.xz"
+  sha256: "bfdd7ea921718c22de8b2dd5946e8fbbe2a7d35748cd7a0df0abe6a0a24ec7a4"
+files_dir: files
