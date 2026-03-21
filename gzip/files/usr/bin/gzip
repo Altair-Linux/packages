@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "gzip stub — replaced at build time"
