@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "gcc stub — replaced at build time"
