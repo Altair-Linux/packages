@@ -1,14 +1,14 @@
-name: linux-headers
-version: "6.9.12"
+name: musl
+version: "1.2.5"
 architecture: x86_64
-description: Linux kernel headers for userspace development and libc bootstrapping
+description: Lightweight, fast, and correct C standard library for Linux
 maintainer: "Altair Linux <contact@altairlinux.org>"
-license: GPL-2.0-only
-dependencies: []
+license: MIT
+dependencies: [linux-headers]
 optional_dependencies: []
-conflicts: []
-provides: [linux-api-headers]
+conflicts: [glibc]
+provides: [libc]
 source:
-  url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.12.tar.xz"
-  sha256: "b9c4a9951ed39e36d0a5b4b32edfe8d0d0a87cc62b3d1fb74f0de9d19ac07a27"
+  url: "https://musl.libc.org/releases/musl-1.2.5.tar.gz"
+  sha256: "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4"
 files_dir: files
