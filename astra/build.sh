@@ -14,33 +14,30 @@ astra_build_init
 
 : "${PREFIX:=/usr}"
 
-# Capture the working directory before any cd so we have a stable
-# reference for --target-dir and install, without relying on OLDPWD.
+# Capture working directory before any cd for stable path references.
 BUILD_DIR="$(pwd)/target"
 
-# Locate the top-level Cargo.toml. The package manager unpacks the source
-# archive into a single subdirectory. We search at depth 1 and 2, explicitly
-# pruning target/, examples/, and tests/ to avoid false matches from
-# workspace members. We require exactly one candidate.
-CANDIDATES=$(
-    find . \
-        \( -path '*/target/*' -o -path '*/examples/*' -o -path '*/tests/*' \) -prune \
-        -o -mindepth 1 -maxdepth 2 -name 'Cargo.toml' -print \
-    | sort
-)
+# Prefer the top-level Cargo.toml at depth 1 — this is unambiguous even
+# in workspace layouts where member crates add their own Cargo.toml files
+# at depth 2+. Only fall back to depth 2 if nothing exists at depth 1.
+SRC_ROOT=$(find . -mindepth 1 -maxdepth 1 -name 'Cargo.toml' | head -n1 | xargs -r dirname)
 
-COUNT=$(printf '%s\n' "${CANDIDATES}" | grep -c . || true)
+if [ -z "${SRC_ROOT}" ]; then
+    # Depth-2 fallback: take the shallowest candidate, excluding
+    # target/, examples/, and tests/ to avoid workspace member noise.
+    SRC_ROOT=$(
+        find . \
+            \( -path '*/target/*' -o -path '*/examples/*' -o -path '*/tests/*' \) -prune \
+            -o -mindepth 2 -maxdepth 2 -name 'Cargo.toml' -print \
+        | sort | head -n1 | xargs -r dirname
+    )
+fi
 
-if [ "${COUNT}" -eq 0 ]; then
-    echo "error: no Cargo.toml found in unpacked source tree." >&2
-    exit 1
-elif [ "${COUNT}" -gt 1 ]; then
-    echo "error: multiple Cargo.toml candidates found — cannot determine source root:" >&2
-    printf '%s\n' "${CANDIDATES}" >&2
+if [ -z "${SRC_ROOT}" ]; then
+    echo "error: could not locate Cargo.toml in unpacked source tree." >&2
     exit 1
 fi
 
-SRC_ROOT=$(dirname "${CANDIDATES}")
 cd "${SRC_ROOT}"
 
 cargo build --release --target-dir "${BUILD_DIR}" -p astra
