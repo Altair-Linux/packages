@@ -1,0 +1,14 @@
+name: ca-certificates
+version: "20240203"
+architecture: x86_64
+description: Common CA certificates for SSL/TLS verification
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: MPL-2.0
+dependencies: [openssl]
+optional_dependencies: []
+conflicts: []
+provides: [ca-certificates]
+source:
+  url: "https://curl.se/ca/cacert-2024-02-02.pem"
+  sha256: "1bf458412568e134a4514f5e170a328d11091e071c7110955c9884ed87972ac9"
+files_dir: files
