@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "musl-gcc stub — replaced at build time"
