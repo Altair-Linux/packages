@@ -7,18 +7,26 @@
 # Prerequisites: musl, gcc, make, zlib, perl.
 set -eu
 
-: "${DESTDIR:?DESTDIR must be set}"
+. "$(dirname "$0")/../common.sh"
+astra_build_init
+
 : "${PREFIX:=/usr}"
 
-case "${SOURCE_SHA256:-unset}" in
-  placeholder-*|unset)
-    echo "error: SOURCE_SHA256 is not set or is a placeholder. Refusing to build." >&2
-    exit 1
-    ;;
+# Map ALTAIR_TARGET to the OpenSSL platform string.
+# Default to linux-x86_64 if unset or unrecognized.
+case "${ALTAIR_TARGET:-x86_64-altair-linux-musl}" in
+    x86_64-*)  OPENSSL_PLATFORM="linux-x86_64" ;;
+    aarch64-*) OPENSSL_PLATFORM="linux-aarch64" ;;
+    armv7-*)   OPENSSL_PLATFORM="linux-armv4" ;;
+    riscv64-*) OPENSSL_PLATFORM="linux64-riscv64" ;;
+    *)
+        echo "warning: unknown ALTAIR_TARGET '${ALTAIR_TARGET}', defaulting to linux-x86_64" >&2
+        OPENSSL_PLATFORM="linux-x86_64"
+        ;;
 esac
 
 perl Configure \
-    linux-x86_64 \
+    "${OPENSSL_PLATFORM}" \
     --prefix="${PREFIX}" \
     --openssldir="/etc/ssl" \
     --libdir=lib \
