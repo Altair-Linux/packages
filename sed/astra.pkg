@@ -1,0 +1,8 @@
+name=sed
+version=4.9
+architecture=x86_64
+description=GNU sed — stream editor for filtering and transforming text
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make
+files_dir=files

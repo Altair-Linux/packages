@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "zlib stub — replaced at build time"
+```
+
+---
+
+**`openssl/astra.pkg`:**
+```
+name=openssl
+version=3.3.1
+architecture=x86_64
+description=OpenSSL — TLS/SSL and cryptography library
+maintainer=Altair Linux <contact@altairlinux.org>
+license=Apache-2.0
+dependencies=musl gcc make zlib
+files_dir=files

@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "ssh stub — replaced at build time"
+```
+
+---
+
+**`e2fsprogs/astra.pkg`:**
+```
+name=e2fsprogs
+version=1.47.1
+architecture=x86_64
+description=e2fsprogs — ext2/3/4 filesystem utilities
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-2.0-or-later
+dependencies=musl gcc make util-linux
+files_dir=files

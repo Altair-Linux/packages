@@ -1,0 +1,14 @@
+name: openssl
+version: "3.3.1"
+architecture: x86_64
+description: OpenSSL — TLS/SSL and cryptography library
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: Apache-2.0
+dependencies: [musl, gcc, make, zlib]
+optional_dependencies: []
+conflicts: []
+provides: [openssl, libssl, libcrypto]
+source:
+  url: "https://www.openssl.org/source/openssl-3.3.1.tar.gz"
+  sha256: "777cd596284c883375a2a7a11bf5d2786fc5413255efab20c50d6ffe6d020b7e"
+files_dir: files

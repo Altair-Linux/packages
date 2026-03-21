@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "openssl stub — replaced at build time"
+```
+
+---
+
+**`ca-certificates/astra.pkg`:**
+```
+name=ca-certificates
+version=20240203
+architecture=x86_64
+description=Common CA certificates for SSL/TLS verification
+maintainer=Altair Linux <contact@altairlinux.org>
+license=MPL-2.0
+dependencies=openssl
+files_dir=files

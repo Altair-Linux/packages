@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "tar stub — replaced at build time"
+```
+
+---
+
+**`gzip/astra.pkg`:**
+```
+name=gzip
+version=1.13
+architecture=x86_64
+description=GNU gzip — compression and decompression utility
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make
+files_dir=files

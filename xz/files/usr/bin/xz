@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "xz stub — replaced at build time"
+```
+
+---
+
+**`bzip2/astra.pkg`:**
+```
+name=bzip2
+version=1.0.8
+architecture=x86_64
+description=bzip2 — high-quality block-sorting file compressor
+maintainer=Altair Linux <contact@altairlinux.org>
+license=bzip2-1.0.6
+dependencies=musl gcc make
+files_dir=files

@@ -1,0 +1,14 @@
+name: util-linux
+version: "2.40.1"
+architecture: x86_64
+description: util-linux — essential system utilities (mount, lsblk, fdisk, etc.)
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-2.0-or-later
+dependencies: [musl, gcc, make, ncurses]
+optional_dependencies: []
+conflicts: []
+provides: [util-linux]
+source:
+  url: "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.40/util-linux-2.40.1.tar.xz"
+  sha256: "27e4380b9628e39c0c5864b8e5c5a9dc4ee82b5e25fe57e1c1e8c77e85e57f7e"
+files_dir: files

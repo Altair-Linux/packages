@@ -1,0 +1,14 @@
+name: coreutils
+version: "9.5"
+architecture: x86_64
+description: GNU coreutils — basic file, shell, and text manipulation utilities
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [coreutils]
+source:
+  url: "https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
+  sha256: "cd328edeac92f6a665de9f323c93b712af1858bc2e8d45422bc5a4ac84fa9660"
+files_dir: files

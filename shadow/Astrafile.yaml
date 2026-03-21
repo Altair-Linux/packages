@@ -1,0 +1,14 @@
+name: shadow
+version: "4.16.0"
+architecture: x86_64
+description: shadow — user and group account management utilities
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: BSD-3-Clause
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [shadow, passwd, useradd, groupadd]
+source:
+  url: "https://github.com/shadow-maint/shadow/releases/download/4.16.0/shadow-4.16.0.tar.xz"
+  sha256: "a33b2c015b8e60b2b0f14a1657e1c5f3a5f0a4ac4c7e994be03fbbde35f29a8c"
+files_dir: files

@@ -1,0 +1,8 @@
+name=iproute2
+version=6.9.0
+architecture=x86_64
+description=iproute2 — IP routing and network configuration utilities
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-2.0-or-later
+dependencies=musl gcc make zlib
+files_dir=files

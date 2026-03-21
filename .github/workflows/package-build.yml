@@ -2,6 +2,10 @@ name: Package Build
 
 on:
   push:
+    branches:
+      - main
+      - 'release/**'
+      - 'dev/**'
     paths:
       - '**/astra.pkg'
       - '**/Astrafile.yaml'
@@ -23,6 +27,7 @@ concurrency:
 
 jobs:
   discover-packages:
+    name: Discover Packages
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
@@ -40,11 +45,11 @@ jobs:
             echo 'matrix={"package":[]}' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-
           json=$(printf '%s\n' "$dirs" | jq -R . | jq -cs '{package: .}')
           echo "matrix=$json" >> "$GITHUB_OUTPUT"
 
   build-packages:
+    name: Build ${{ matrix.package }}
     needs: discover-packages
     runs-on: ubuntu-latest
     strategy:
@@ -65,6 +70,16 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: Astra
+
+      - name: Install OpenSSL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config
 
       - name: Build Astra binary
         working-directory: Astra
@@ -95,11 +110,9 @@ jobs:
             echo "No package artifact found for ${pkg_name}"
             exit 1
           fi
-
           mkdir -p .astra-integration-data .astra-integration-root
           Astra/target/debug/astra --data-dir .astra-integration-data --root .astra-integration-root init
           Astra/target/debug/astra --data-dir .astra-integration-data --root .astra-integration-root key generate
-
           Astra/target/debug/astra --data-dir .astra-integration-data --root .astra-integration-root install --local "${pkg_file}"
           Astra/target/debug/astra --data-dir .astra-integration-data --root .astra-integration-root remove "${pkg_name}"
           Astra/target/debug/astra --data-dir .astra-integration-data --root .astra-integration-root upgrade
@@ -112,6 +125,7 @@ jobs:
           if-no-files-found: error
 
   collect-artifacts:
+    name: Collect Artifacts
     needs: build-packages
     runs-on: ubuntu-latest
     steps:
@@ -120,32 +134,44 @@ jobs:
         with:
           path: dist/packages
 
-      - name: Normalize artifact output directory
+      - name: Collect into single directory
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dist/standard-output
-          find dist/packages -type f -name '*.astpkg' -exec cp {} dist/standard-output/ \;
-          ls -lah dist/standard-output
+          mkdir -p dist/output
+          find dist/packages -type f -name '*.astpkg' -exec cp {} dist/output/ \;
+          echo "### Built packages" >> $GITHUB_STEP_SUMMARY
+          find dist/output -maxdepth 1 -type f -name '*.astpkg' -print0             | while IFS= read -r -d '' f; do
+              base=$(basename "$f")
+              size=$(du -sh "$f" | cut -f1)
+              sha=$(sha256sum "$f" | awk '{print $1}')
+              echo "- \`${base}\` (${size}) \`${sha}\`" >> $GITHUB_STEP_SUMMARY
+            done
 
-      - name: Upload standardized artifacts
+      - name: Upload combined artifact
         uses: actions/upload-artifact@v4
         with:
-          name: astra-packages-standard-output
-          path: dist/standard-output/*.astpkg
+          name: astra-packages
+          path: dist/output/*.astpkg
           if-no-files-found: error
 
-  update-altair-repo:
+  publish:
+    name: Publish to altair-repo
     needs: collect-artifacts
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.ALTAIR_REPO_TOKEN != ''
+    # Gate conditions — ALL three must be true to publish:
+    #   1. Push to main branch
+    #   2. vars.PUBLISH_ENABLED == 'true'  (repo variable — opt-in to publishing)
+    #   3. vars.ALTAIR_REPO_TOKEN_SET == 'true'  (repo variable — must be set to 'true'
+    #      at the same time as the ALTAIR_REPO_TOKEN secret is added, and cleared when
+    #      the secret is removed; keeps the job-level if: in sync with the secret)
+    # NOTE: secrets.ALTAIR_REPO_TOKEN cannot be referenced in job-level if: conditions
+    # (GitHub Actions limitation), so vars.ALTAIR_REPO_TOKEN_SET acts as its proxy.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PUBLISH_ENABLED == 'true' && vars.ALTAIR_REPO_TOKEN_SET == 'true'
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Checkout packages
-        uses: actions/checkout@v4
-
       - name: Checkout altair-repo
         uses: actions/checkout@v4
         with:
@@ -153,20 +179,20 @@ jobs:
           token: ${{ secrets.ALTAIR_REPO_TOKEN }}
           path: altair-repo
 
-      - name: Download standardized artifacts
+      - name: Download combined artifacts
         uses: actions/download-artifact@v4
         with:
-          name: astra-packages-standard-output
-          path: dist/standard-output
+          name: astra-packages
+          path: dist/output
 
-      - name: Publish packages to altair-repo unstable channel
+      - name: Publish packages to unstable channel
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p altair-repo/unstable/packages
-          cp -f dist/standard-output/*.astpkg altair-repo/unstable/packages/
+          cp -f dist/output/*.astpkg altair-repo/unstable/packages/
 
-      - name: Regenerate unstable repository index
+      - name: Regenerate unstable index
         shell: bash
         working-directory: altair-repo
         run: |
@@ -177,13 +203,11 @@ jobs:
             base=$(basename "$file")
             size=$(stat -c%s "$file")
             checksum=$(sha256sum "$file" | awk '{print $1}')
-
             stem="${base%.astpkg}"
             arch="${stem##*-}"
             rest="${stem%-*}"
             version="${rest##*-}"
             name="${rest%-*}"
-
             entry=$(jq -n \
               --arg name "$name" \
               --arg version "$version" \
@@ -191,19 +215,17 @@ jobs:
               --arg checksum "$checksum" \
               --arg filename "$base" \
               --argjson size "$size" \
-              '{name:$name,version:$version,architecture:$arch,description:"",dependencies:[],conflicts:[],provides:[],checksum:$checksum,filename:$filename,size:$size,license:"",maintainer:""}')
-
+              '{name:$name,version:$version,architecture:$arch,description:"",dependencies:[],maintainer:"",license:"",conflicts:[],provides:[],checksum:$checksum,filename:$filename,size:$size}')
             pkgs_json=$(jq -c --argjson entry "$entry" '. + [$entry]' <<< "$pkgs_json")
           done
-
           jq -n \
+            --arg format_version "1" \
             --arg name "unstable" \
             --arg description "Altair Linux package repository" \
             --arg updated "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --argjson packages "$pkgs_json" \
-            '{name:$name,description:$description,last_updated:$updated,packages:$packages}' \
+            '{format_version:($format_version|tonumber),name:$name,description:$description,last_updated:$updated,packages:$packages}' \
             > unstable/index.json
-
           jq -e . unstable/index.json > /dev/null
 
       - name: Create pull request in altair-repo
@@ -211,47 +233,12 @@ jobs:
         with:
           token: ${{ secrets.ALTAIR_REPO_TOKEN }}
           path: altair-repo
-          commit-message: "chore(repo): publish built packages and refresh unstable index"
+          commit-message: "chore(repo): publish packages and refresh unstable index"
           title: "chore(repo): publish packages from packages workflow"
           body: |
-            Automated update from packages workflow.
-
+            Automated update from packages workflow run ${{ github.run_id }}.
             - Publishes latest built `.astpkg` files to `unstable/packages/`
             - Regenerates `unstable/index.json`
           branch: "automation/publish-packages-${{ github.run_id }}"
           base: main
           delete-branch: true
-
-  trigger-astra-ops:
-    needs: collect-artifacts
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.ASTRA_REPO_TOKEN != ''
-    steps:
-      - name: Trigger Astra ecosystem automation workflow
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api repos/Altair-Linux/Astra/dispatches \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -f event_type='packages-updated' \
-            -f client_payload[repository]="${{ github.repository }}" \
-            -f client_payload[ref]="${{ github.ref }}" \
-            -f client_payload[sha]="${{ github.sha }}"
-        env:
-          GH_TOKEN: ${{ secrets.ASTRA_REPO_TOKEN }}
-
-  notify-failure:
-    needs: [build-packages, collect-artifacts, update-altair-repo, trigger-astra-ops]
-    runs-on: ubuntu-latest
-    if: failure() && secrets.DISCORD_WEBHOOK_URL != ''
-    steps:
-      - name: Notify Discord on workflow failure
-        shell: bash
-        run: |
-          set -euo pipefail
-          payload=$(jq -n \
-            --arg repo "${{ github.repository }}" \
-            --arg run_url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            '{content:("❌ Package Build workflow failed for " + $repo + "\n" + $run_url)}')
-          curl -sS -X POST -H "Content-Type: application/json" -d "$payload" "${{ secrets.DISCORD_WEBHOOK_URL }}"

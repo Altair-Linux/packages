@@ -1,0 +1,14 @@
+name: openssh
+version: "9.8p1"
+architecture: x86_64
+description: OpenSSH — remote login and file transfer via SSH protocol
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: BSD-2-Clause
+dependencies: [musl, gcc, make, openssl, zlib, ca-certificates]
+optional_dependencies: []
+conflicts: []
+provides: [openssh, ssh, sshd]
+source:
+  url: "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.8p1.tar.gz"
+  sha256: "dd8bd002a379b5d499dfb050dd1fa9af8029e80461f4bb6c523c49973f5a39f3"
+files_dir: files

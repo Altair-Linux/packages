@@ -1,0 +1,14 @@
+#!/bin/sh
+echo "ld stub — replaced at build time"
+```
+
+**`gcc/astra.pkg`:**
+```
+name=gcc
+version=13.3.0
+architecture=x86_64
+description=GNU Compiler Collection — C and C++ compilers
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl linux-headers binutils
+files_dir=files

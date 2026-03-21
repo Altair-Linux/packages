@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "mke2fs stub — replaced at build time"
+```
+
+---
+
+**`shadow/astra.pkg`:**
+```
+name=shadow
+version=4.16.0
+architecture=x86_64
+description=shadow — user and group account management utilities
+maintainer=Altair Linux <contact@altairlinux.org>
+license=BSD-3-Clause
+dependencies=musl gcc make
+files_dir=files

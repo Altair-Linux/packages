@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "diff stub — replaced at build time"

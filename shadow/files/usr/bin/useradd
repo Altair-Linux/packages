@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "useradd stub — replaced at build time"
+```
+
+---
+
+**`astra/astra.pkg`:**
+```
+name=astra
+version=0.1.0
+architecture=x86_64
+description=Astra — the Altair Linux package manager
+maintainer=Altair Linux <contact@altairlinux.org>
+license=MIT
+dependencies=musl gcc make openssl zlib ca-certificates curl
+files_dir=files

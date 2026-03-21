@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "make stub — replaced at build time"

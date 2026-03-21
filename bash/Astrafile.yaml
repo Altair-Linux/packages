@@ -1,0 +1,14 @@
+name: bash
+version: "5.2.21"
+architecture: x86_64
+description: GNU Bash — the Bourne Again SHell
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make, ncurses, readline]
+optional_dependencies: []
+conflicts: []
+provides: [bash, sh]
+source:
+  url: "https://ftp.gnu.org/gnu/bash/bash-5.2.21.tar.gz"
+  sha256: "5aefd55f239330e4b6ae3e79e0e9bcbf4a7ca46c1d2a9a2c89b9e41aced52b6e"
+files_dir: files

@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "pkg-config stub — replaced at build time"

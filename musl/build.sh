@@ -4,13 +4,15 @@
 # musl is the system libc for Altair Linux; it must be built before
 # binutils or gcc, which link against it.
 #
-# Prerequisites: a working C compiler (host cc), linux-headers installed.
-# On the very first bootstrap pass a cross-compiler or temporary host gcc
-# is used; subsequent passes use the previously installed musl-gcc wrapper.
+# Prerequisites: a working host C compiler, linux-headers installed.
+# On the very first bootstrap pass a host gcc is used; subsequent passes
+# use the previously installed musl-gcc wrapper.
 set -eu
 
-: "${DESTDIR:?DESTDIR must be set}"
 : "${PREFIX:=/usr}"
+
+. "$(dirname "$0")/../common.sh"
+astra_build_init
 
 ./configure \
     --prefix="${PREFIX}" \

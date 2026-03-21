@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "readline stub — replaced at build time"
+```
+
+---
+
+**`bash/astra.pkg`:**
+```
+name=bash
+version=5.2.21
+architecture=x86_64
+description=GNU Bash — the Bourne Again SHell
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make ncurses readline
+files_dir=files

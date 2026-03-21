@@ -1,0 +1,8 @@
+name=grep
+version=3.11
+architecture=x86_64
+description=GNU grep — print lines that match patterns
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make
+files_dir=files

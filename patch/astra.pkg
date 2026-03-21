@@ -1,0 +1,8 @@
+name=patch
+version=2.7.6
+architecture=x86_64
+description=GNU patch — apply diff files to originals
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make
+files_dir=files

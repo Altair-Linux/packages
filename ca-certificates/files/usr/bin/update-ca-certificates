@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "ca-certificates stub — replaced at build time"
+```
+
+---
+
+**`wget/astra.pkg`:**
+```
+name=wget
+version=1.21.4
+architecture=x86_64
+description=GNU wget — non-interactive network downloader
+maintainer=Altair Linux <contact@altairlinux.org>
+license=GPL-3.0-or-later
+dependencies=musl gcc make openssl zlib ca-certificates
+files_dir=files
