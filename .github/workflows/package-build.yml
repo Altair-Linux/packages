@@ -223,6 +223,7 @@ jobs:
             --argjson packages "$pkgs_json" \
             '{name:$name,description:$description,last_updated:$updated,packages:$packages}' \
             > unstable/index.json
+          jq -e . unstable/index.json > /dev/null
 
       - name: Create pull request in altair-repo
         uses: peter-evans/create-pull-request@v6
