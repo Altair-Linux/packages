@@ -157,20 +157,11 @@ jobs:
     name: Publish to altair-repo
     needs: collect-artifacts
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PUBLISH_ENABLED == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PUBLISH_ENABLED == 'true' && vars.ALTAIR_REPO_TOKEN_SET == 'true'
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Verify ALTAIR_REPO_TOKEN is set
-        env:
-          TOKEN: ${{ secrets.ALTAIR_REPO_TOKEN }}
-        run: |
-          if [[ -z "${TOKEN}" ]]; then
-            echo "::error::ALTAIR_REPO_TOKEN secret is not set. Cannot publish to altair-repo."
-            exit 1
-          fi
-
       - name: Checkout altair-repo
         uses: actions/checkout@v4
         with:
