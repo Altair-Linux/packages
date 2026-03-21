@@ -1,0 +1,14 @@
+name: diffutils
+version: "3.10"
+architecture: x86_64
+description: GNU diffutils — diff, cmp, diff3, and sdiff
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [diffutils]
+source:
+  url: "https://ftp.gnu.org/gnu/diffutils/diffutils-3.10.tar.xz"
+  sha256: "90861ebe7a5c3e71ea59bdf4a6c5b2f3e3ff1afcffef5dde4b9f9ae5ee7b2cd3"
+files_dir: files
