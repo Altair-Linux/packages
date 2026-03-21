@@ -1,0 +1,14 @@
+name: astra
+version: "rolling-6d886735d7633cfad497988f854e2b9f70d08b9f"
+architecture: x86_64
+description: Astra — the Altair Linux package manager
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: ZPL-2.1
+dependencies: [musl, gcc, make, openssl, zlib, ca-certificates, curl]
+optional_dependencies: []
+conflicts: []
+provides: [astra, package-manager]
+source:
+  url: "https://github.com/Altair-Linux/Astra/archive/refs/tags/rolling-6d886735d7633cfad497988f854e2b9f70d08b9f.tar.gz"
+  sha256: "9e487c1bf9f7b78a54caa32afb9f537b1d31e7de5a372804b08106cf7345c1f0"
+files_dir: files
