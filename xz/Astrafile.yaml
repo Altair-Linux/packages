@@ -1,0 +1,14 @@
+name: xz
+version: "5.6.2"
+architecture: x86_64
+description: XZ utils — LZMA compression and decompression tools
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: GPL-3.0-or-later
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [xz, liblzma]
+source:
+  url: "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.xz"
+  sha256: "a9db3bb3d64e248a0fae963f8fb6ba851a26ba1822e504dc0efd18a80c626caf"
+files_dir: files
