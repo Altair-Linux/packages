@@ -1,0 +1,14 @@
+name: zlib
+version: "1.3.1"
+architecture: x86_64
+description: zlib — general-purpose lossless data-compression library
+maintainer: "Altair Linux <contact@altairlinux.org>"
+license: Zlib
+dependencies: [musl, gcc, make]
+optional_dependencies: []
+conflicts: []
+provides: [zlib, libz]
+source:
+  url: "https://zlib.net/zlib-1.3.1.tar.xz"
+  sha256: "38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32"
+files_dir: files
