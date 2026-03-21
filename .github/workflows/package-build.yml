@@ -3,7 +3,9 @@ name: Package Build
 on:
   push:
     branches:
-      - '**'
+      - main
+      - 'release/**'
+      - 'dev/**'
     paths:
       - '**/astra.pkg'
       - '**/Astrafile.yaml'
