@@ -4,5 +4,6 @@ architecture=x86_64
 description=GNU binary utilities — assembler, linker, and related tools
 maintainer=Altair Linux <contact@altairlinux.org>
 license=GPL-3.0-or-later
-dependencies=musl linux-headers
+dependencies=musl linux-headers make
 files_dir=files
+
