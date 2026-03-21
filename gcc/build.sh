@@ -10,8 +10,6 @@
 # alongside this source tree before building. They are declared as
 # additional sources in Astrafile.yaml and extracted by the package
 # manager into the gcc source directory before this script runs.
-# Do NOT call ./contrib/download_prerequisites at build time — that
-# introduces an unverified network dependency.
 #
 # Prerequisites: musl, linux-headers, binutils, make.
 # Build must be done out-of-tree.
@@ -22,14 +20,41 @@ astra_build_init
 
 : "${PREFIX:=/usr}"
 
+# ALTAIR_TARGET: the target triple we are building FOR.
+# ALTAIR_BUILD:  the triple of the machine running this build (defaults to target for native builds).
+# ALTAIR_HOST:   the triple of the machine that will run the compiler (defaults to target).
+: "${ALTAIR_BUILD:=${ALTAIR_TARGET}}"
+: "${ALTAIR_HOST:=${ALTAIR_TARGET}}"
+
+# Derive arch-specific GCC flags from ALTAIR_TARGET so non-x86_64
+# targets are configured correctly.
+case "${ALTAIR_TARGET}" in
+    x86_64-*)
+        ARCH_FLAGS="--with-arch=x86-64 --with-tune=generic"
+        ;;
+    aarch64-*)
+        ARCH_FLAGS="--with-arch=armv8-a"
+        ;;
+    riscv64-*)
+        ARCH_FLAGS="--with-arch=rv64gc --with-abi=lp64d"
+        ;;
+    armv7-*)
+        ARCH_FLAGS="--with-arch=armv7-a --with-float=hard --with-fpu=vfpv3-d16"
+        ;;
+    *)
+        ARCH_FLAGS=""
+        ;;
+esac
+
 mkdir -p build
 cd build
 
+# shellcheck disable=SC2086
 ../configure \
     --prefix="${PREFIX}" \
     --target="${ALTAIR_TARGET}" \
-    --host="${ALTAIR_TARGET}" \
-    --build="${ALTAIR_TARGET}" \
+    --host="${ALTAIR_HOST}" \
+    --build="${ALTAIR_BUILD}" \
     --enable-languages=c,c++ \
     --with-sysroot=/ \
     --enable-shared \
@@ -44,8 +69,7 @@ cd build
     --disable-libgomp \
     --with-system-zlib \
     --with-linker-hash-style=gnu \
-    --with-arch=x86-64 \
-    --with-tune=generic
+    ${ARCH_FLAGS}
 
 make -j"${JOBS:-$(nproc)}"
 make DESTDIR="${DESTDIR}" install
