@@ -8,24 +8,19 @@
 # Build is done out-of-tree as required by the binutils build system.
 set -eu
 
-: "${DESTDIR:?DESTDIR must be set}"
 : "${PREFIX:=/usr}"
 
-case "${SOURCE_SHA256:-unset}" in
-  placeholder-*|unset)
-    echo "error: SOURCE_SHA256 is not set or is a placeholder. Refusing to build." >&2
-    exit 1
-    ;;
-esac
+. "$(dirname "$0")/../common.sh"
+astra_build_init
 
 mkdir -p build
 cd build
 
 ../configure \
     --prefix="${PREFIX}" \
-    --target=x86_64-altair-linux-musl \
-    --host=x86_64-altair-linux-musl \
-    --build=x86_64-altair-linux-musl \
+    --target="${ALTAIR_TARGET}" \
+    --host="${ALTAIR_TARGET}" \
+    --build="${ALTAIR_TARGET}" \
     --with-sysroot=/ \
     --enable-shared \
     --enable-static \
