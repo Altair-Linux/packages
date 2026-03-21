@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "bzip2 stub — replaced at build time"
+```
+
+---
+
+**`ncurses/astra.pkg`:**
+```
+name=ncurses
+version=6.5
+architecture=x86_64
+description=ncurses — terminal handling library
+maintainer=Altair Linux <contact@altairlinux.org>
+license=MIT
+dependencies=musl gcc make
+files_dir=files
