@@ -214,15 +214,16 @@ jobs:
               --arg checksum "$checksum" \
               --arg filename "$base" \
               --argjson size "$size" \
-              '{name:$name,version:$version,architecture:$arch,checksum:$checksum,filename:$filename,size:$size}')
+              '{name:$name,version:$version,architecture:$arch,description:"",dependencies:[],maintainer:"",license:"",conflicts:[],provides:[],checksum:$checksum,filename:$filename,size:$size}')
             pkgs_json=$(jq -c --argjson entry "$entry" '. + [$entry]' <<< "$pkgs_json")
           done
           jq -n \
+            --arg format_version "1" \
             --arg name "unstable" \
             --arg description "Altair Linux package repository" \
             --arg updated "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --argjson packages "$pkgs_json" \
-            '{name:$name,description:$description,last_updated:$updated,packages:$packages}' \
+            '{format_version:($format_version|tonumber),name:$name,description:$description,last_updated:$updated,packages:$packages}' \
             > unstable/index.json
           jq -e . unstable/index.json > /dev/null
 
