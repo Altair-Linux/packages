@@ -15,7 +15,10 @@ astra_build_init
 # regardless of the patch version. ASTRA_PKG_VERSION identifies the full
 # package version (e.g. 1.0.8) for the physical file name, while the
 # SONAME stays fixed at 1.0 to preserve ABI compatibility across patch bumps.
-: "${ASTRA_PKG_VERSION:=1.0.8}"
+if [ -z "${ASTRA_PKG_VERSION:-}" ]; then
+    echo "error: ASTRA_PKG_VERSION is not set. The package manager must inject this from Astrafile.yaml." >&2
+    exit 1
+fi
 LIBBZ2_SONAME="libbz2.so.1.0"
 LIBBZ2_SO="libbz2.so.${ASTRA_PKG_VERSION}"
 
