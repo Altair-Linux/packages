@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "ip stub — replaced at build time"
+```
+
+---
+
+**`openssh/astra.pkg`:**
+```
+name=openssh
+version=9.8p1
+architecture=x86_64
+description=OpenSSH — remote login and file transfer via SSH protocol
+maintainer=Altair Linux <contact@altairlinux.org>
+license=BSD-2-Clause
+dependencies=musl gcc make openssl zlib ca-certificates
+files_dir=files
